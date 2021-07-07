@@ -46,7 +46,7 @@ public class ProductController {
 	}
 	 
 	@PostMapping
-	public ResponseEntity<Product> createProduct(@RequestBody Product request) {
+	public ResponseEntity<Product> createProduct(@RequestBody Product request) throws ConflictException {
 		Product product = productService.createProduct(request);
 		
 		URI location = ServletUriComponentsBuilder
@@ -65,7 +65,7 @@ public class ProductController {
 	 }
 	 
 	 @DeleteMapping("/{id}")
-	 public ResponseEntity<Void> deleteProduct(@PathVariable("id") String id) {
+	 public ResponseEntity deleteProduct(@PathVariable("id") String id) throws NotFoundException{
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
 	 }

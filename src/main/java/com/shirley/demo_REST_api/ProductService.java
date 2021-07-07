@@ -14,12 +14,12 @@ public class ProductService {
 	@Autowired
     private ProductRepository repository;
 	
-	public Product createProduct(Product request) {
+	public Product createProduct(Product request) throws ConflictException{
 		Product product = new Product();
 	    product.setName(request.getName());
 	    product.setPrice(request.getPrice());
 
-	    if(repository.existsByName(request.getName())) {
+	    if(repository.existsByName(request.getName())){
 	    	throw new ConflictException("The product already exists.");
 	    }
 	    return repository.insert(product);
@@ -41,8 +41,12 @@ public class ProductService {
 	    return repository.save(product);
 	}
 
-	public void deleteProduct(String id) {
-		repository.deleteById(id);
+	public void deleteProduct(String id) throws NotFoundException{
+		if(!repository.existsById(id)) {
+			throw new NotFoundException("Can't find product.");
+		}else {
+			repository.deleteById(id);
+		}
 	}
 
 	public List<Product> getProducts(ProductQueryParameter param) {
